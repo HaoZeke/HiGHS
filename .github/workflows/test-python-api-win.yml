@@ -1,0 +1,28 @@
+name: Windows Python API Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2019]
+        python: [3.9]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Python version
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/checkout@v2
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Build and install libhighs
+        run: |
+          pip install meson ninja numpy pytest
+          meson setup bbdir -Dhighsint64=False --default-library=static
+          meson install -C bbdir
+          pip install .
+      - name: Test Python Interface
+        run: |
+          pytest -v ./highspy/tests/
