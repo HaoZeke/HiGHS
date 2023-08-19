@@ -4,6 +4,7 @@
 #include "control.h"
 #include "kkt_solver.h"
 #include "iterate.h"
+#include "../../HighsCallbackManager.h"
 
 namespace ipx {
 
@@ -37,6 +38,7 @@ public:
 
     Int maxiter() const { return maxiter_; }
     void maxiter(Int i) { maxiter_ = i; }
+    void set_callback_manager(std::unique_ptr<HighsCallbackManager> manager) { callback_manager_ = std::move(manager); }
 
 private:
     struct Step;
@@ -72,6 +74,7 @@ private:
     // is bad if the primal or dual step size is < 0.05.
     Int num_bad_iter_{0};
     Int maxiter_{-1};
+    std::unique_ptr<HighsCallbackManager> callback_manager_{nullptr};
 };
 
 }  // namespace ipx
