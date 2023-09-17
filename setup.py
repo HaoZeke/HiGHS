@@ -18,15 +18,17 @@ try:
     highs_include_dir = os.path.join(highs_build_dir, 'include', 'highs')
     if not os.path.exists(os.path.join(highs_include_dir, 'Highs.h')):
         raise RuntimeError('Could not find HiGHS include directory')
-    
-    extensions = list()
-    extensions.append(Pybind11Extension('highspy.highs_bindings',
-                                        sources=['highspy/highs_bindings.cpp'],
-                                        language='c++',
-                                        include_dirs=[highs_include_dir],
-                                        library_dirs=[highs_lib_dir],
-                                        libraries=['highs']))
-    
+
+    extensions = [
+        Pybind11Extension(
+            'highspy.highs_bindings',
+            sources=['highspy/highs_bindings.cpp'],
+            language='c++',
+            include_dirs=[highs_include_dir],
+            library_dirs=[highs_lib_dir],
+            libraries=['highs'],
+        )
+    ]
     setup(name='highspy',
           version='1.5.3',
           packages=find_packages(),
